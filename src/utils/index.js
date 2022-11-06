@@ -1,0 +1,1 @@
+export const capitalize = stringItem => `${stringItem[0].toUpperCase()}${stringItem.slice(1)}`;
