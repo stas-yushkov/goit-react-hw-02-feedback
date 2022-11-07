@@ -1,6 +1,6 @@
 import { Component } from 'react';
 
-import { capitalize } from 'utils';
+import { capitalize, sum } from 'utils';
 import { ButtonsWrapper, FeedbackSection, Button } from './StyledComponents';
 
 export class App extends Component {
@@ -19,6 +19,11 @@ export class App extends Component {
       [e.target.name]: prevState[e.target.name] + 1,
     }));
   };
+
+  countTotalFeedback = () => sum(Object.values(this.state));
+
+  countPositiveFeedbackPercentage = () =>
+    Math.round((this.state.good / sum(Object.values(this.state))) * 100);
 
   render() {
     return (
@@ -51,6 +56,16 @@ export class App extends Component {
           {Object.entries(this.state).map(entry => (
             <p key={entry[0]}>{`${capitalize(entry[0])}: ${entry[1]}`}</p>
           ))}
+          <p>{`Total: ${this.countTotalFeedback()}`}</p>
+          <p>
+            {`Positive feedback: 
+              ${
+                sum(Object.values(this.state))
+                  ? this.countPositiveFeedbackPercentage()
+                  : 0
+              }%
+            `}
+          </p>
         </FeedbackSection>
       </div>
     );
