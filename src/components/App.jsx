@@ -1,7 +1,12 @@
 import { Component } from 'react';
 
-import { capitalize, sum } from 'utils';
-import { ButtonsWrapper, FeedbackSection, Button } from './StyledComponents';
+import { Section } from './Section/Section';
+import { FeedbackOptions } from './FeedbackOptions/FeedbackOptions';
+import { Statistics } from './Statistics/Statistics';
+
+import { FeedbackSection } from './StyledComponents';
+
+import { sum } from 'utils';
 
 export class App extends Component {
   constructor(props) {
@@ -22,8 +27,13 @@ export class App extends Component {
 
   countTotalFeedback = () => sum(Object.values(this.state));
 
-  countPositiveFeedbackPercentage = () =>
-    Math.round((this.state.good / sum(Object.values(this.state))) * 100);
+  countPositiveFeedbackPercentage = () => {
+    if (sum(Object.values(this.state)))
+      return `${Math.round(
+        (this.state.good / sum(Object.values(this.state))) * 100
+      )}%`;
+    return '0%';
+  };
 
   render() {
     return (
@@ -38,34 +48,21 @@ export class App extends Component {
         }}
       >
         <FeedbackSection>
-          <h1>Please leave feedback</h1>
-          <ButtonsWrapper count={Object.keys(this.state).length}>
-            {Object.keys(this.state).map(key => (
-              <Button
-                key={key}
-                name={key}
-                type="button"
-                onClick={this.handleFeedbackClick}
-              >
-                {capitalize(key)}
-              </Button>
-            ))}
-          </ButtonsWrapper>
-
-          <p>Statistics</p>
-          {Object.entries(this.state).map(entry => (
-            <p key={entry[0]}>{`${capitalize(entry[0])}: ${entry[1]}`}</p>
-          ))}
-          <p>{`Total: ${this.countTotalFeedback()}`}</p>
-          <p>
-            {`Positive feedback: 
-              ${
-                sum(Object.values(this.state))
-                  ? this.countPositiveFeedbackPercentage()
-                  : 0
-              }%
-            `}
-          </p>
+          <Section title="Please leave feedback">
+            <FeedbackOptions
+              options={Object.keys(this.state)}
+              onLeaveFeedback={this.handleFeedbackClick}
+            />
+          </Section>
+          <Section title="Statistics">
+            <Statistics
+              good={this.state.good}
+              neutral={this.state.neutral}
+              bad={this.state.bad}
+              total={this.countTotalFeedback()}
+              positivePercentage={this.countPositiveFeedbackPercentage()}
+            />
+          </Section>
         </FeedbackSection>
       </div>
     );

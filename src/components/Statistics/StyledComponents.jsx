@@ -1,5 +1,5 @@
 import styled from 'styled-components';
 
-export const FeedbackSection = styled.section`
+export const Wrapper = styled.div`
   //
 `;
